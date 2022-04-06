@@ -1,6 +1,6 @@
 // TYPESCRIPT NOTES
 
-let name: string;
+let tempName: string;
 let age: number | string;
 let isStudent: boolean;
 let hobbies: string[];
