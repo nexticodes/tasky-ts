@@ -5,7 +5,7 @@ import InputField from './components/InputField';
 
 const App: React.FC = () => {
 
-  const [todo, setTodo] = useState<string | number>("");
+  const [todo, setTodo] = useState<string>("");
 
   return (
     <div className="App">
