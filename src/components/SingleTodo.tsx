@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Todo } from "../model";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
@@ -24,27 +24,37 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
     };
 
     const handleEdit = (e: React.FormEvent, id: number) => {
-      e.preventDefault();
-      setTodos(todos.map(t => (
-        t.id === id ? {...t, todo: editTodo} : todo
-      )))
-      setEdit(false);
-    }
+        e.preventDefault();
+        setTodos(
+            todos.map((t) => (t.id === id ? { ...t, todo: editTodo } : todo))
+        );
+        setEdit(false);
+    };
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      inputRef.current?.focus();
+    }, [edit])
 
     return (
-        <form className="todos__single" onSubmit={(e) => handleEdit(e, todo.id)}>
-            {
-              edit ? (
-                <input value={editTodo} onChange={(e) => setEditTodo(e.target.value)} className="todos__single--text"/>
-              ) : 
-                todo.isDone ? (
-                    <s className="todos__single--text">{todo.todo}</s>
-                ) : (
-                    <span className="todos__single--text">{todo.todo}</span>
-                )
-            }
-            
-            
+        <form
+            className="todos__single"
+            onSubmit={(e) => handleEdit(e, todo.id)}
+        >
+            {edit ? (
+                <input
+                    ref={inputRef}
+                    value={editTodo}
+                    onChange={(e) => setEditTodo(e.target.value)}
+                    className="todos__single--text"
+                />
+            ) : todo.isDone ? (
+                <s className="todos__single--text">{todo.todo}</s>
+            ) : (
+                <span className="todos__single--text">{todo.todo}</span>
+            )}
+
             <div>
                 <span
                     className="icon"
