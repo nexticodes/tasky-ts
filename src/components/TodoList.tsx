@@ -2,6 +2,8 @@ import React from "react";
 import { Todo } from "../model";
 import "./styles.css";
 import SingleTodo from "./SingleTodo";
+import { Droppable } from "react-beautiful-dnd";
+import { setCommentRange } from "typescript";
 
 interface Props {
     todos: Todo[];
@@ -10,26 +12,39 @@ interface Props {
     setCompletedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const TodoList: React.FC<Props> = ({ todos, setTodos }: Props) => {
+const TodoList: React.FC<Props> = ({ todos, setTodos, completedTodos, setCompletedTodos }: Props) => {
     return (
         <div className="container">
-            <div className="todos">
-                <span className="todos__heading">
-                    Active Tasks
-                </span>
-            </div>
-            <div className="todos remove">
-                {
-                    todos.map(t =>(
-                        <SingleTodo
-                            todo={t}
-                            todos={todos}
-                            key={t.id}
-                            setTodos={setTodos}
-                        />
-                    ))
-                }
-            </div>
+            <Droppable droppableId="TodosList">
+                {(provided) => (
+                    <div className="todos" ref={provided.innerRef} {...provided.droppableProps}>
+                        <span className="todos__heading">Active Tasks</span>
+                        {todos.map((t) => (
+                            <SingleTodo
+                                todo={t}
+                                todos={todos}
+                                key={t.id}
+                                setTodos={setTodos}
+                            />
+                        ))}
+                    </div>
+                )}
+            </Droppable>
+            <Droppable droppableId="TodosRemove">
+                {(provided) => (
+                    <div className="todos remove" ref={provided.innerRef} {...provided.droppableProps}>
+                        <span className="todos__heading">Completed Tasks</span>
+                        {completedTodos.map((t) => (
+                            <SingleTodo
+                                todo={t}
+                                todos={completedTodos}
+                                key={t.id}
+                                setTodos={setCompletedTodos}
+                            />
+                        ))}
+                    </div>
+                )}
+            </Droppable>
         </div>
     );
 };
